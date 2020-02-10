@@ -24,34 +24,90 @@
 // }
 
 import { 
-    createStore
+    createStore, bindActionCreators
 } from 'redux';
+
+// {
+//     type: INCREMENT,
+//     id: 0
+// }
+
+import { composeWithDevTools } from 'redux-devtools-extension';
+
+const INCREMENT = 'INCREMENT';
+const DECREMENT = 'DECREMENT';
+
+const ADD_COUNTER = 'ADD_COUNTER';
+const DEL_COUNTER = 'DEL_COUNTER';
+
+// Write action creator functions.
+// They format your action objects.
+// Again, to avoid typos.
+
+function actionIncrement(howMuch=1) {
+    return {
+        type: INCREMENT,
+        amount: howMuch
+    }
+}
+
+function actionDecrement(howMuch=1) {
+    return {
+        type: DECREMENT,
+        amount: howMuch
+    }
+}
+
+function actionAddCounter() {
+    return {
+        type: ADD_COUNTER
+    }
+}
+
+function actionDelCounter() {
+    return {
+        type: DEL_COUNTER
+    }
+}
 
 
 // "The teller" - reducer function
 // reducers are always named for the state they manage
 // They always receive the current state and the action 
 // they're processing.
-function counter(state={amount: 100}, action) {
+
+const defaultState = {
+    amounts: [0, 0, 0, 0]
+};
+
+
+function counter(state=defaultState, action) {
     console.table(action);
     const newState = { ...state };
-    if (action.type === 'INCREMENT') {
-        newState.amount = state.amount + 1;
-    } else if (action.type === 'DECREMENT') {
-        newState.amount = state.amount - 1;
-    } else {
-        // ... no need to do anything
-        // we already made a copy fo state to return
-    }
-    // They *must* return the new version of state.
 
+    switch(action.type) {
+        case INCREMENT:
+            newState.amounts[action.id] = state.amounts[action.id] + 1;
+            break;
+        case DECREMENT:
+            newState.amounts[action.id] = state.amounts[action.id] - 1;
+            break;
+        case ADD_COUNTER:
+            newState.amounts.push(0);
+            break;
+        case DEL_COUNTER: 
+            newState.amounts.splice(action.id, 1);
+        default: 
+            break;
+    }
     return newState;
 }
+
 
 // You give it a reducer, it gives you a "store".
 // The store is an object that manages your state
 // using your reducer.
-const store = createStore(counter);
+const store = createStore(counter, composeWithDevTools());
 
 // "Push notifications" - subscribe to changes in the store
 store.subscribe(() => {
@@ -60,22 +116,14 @@ store.subscribe(() => {
 });
 
 // Let's give the store some actions to process.
-store.dispatch({
-    type: 'DECREMENT'
-});
 
-store.dispatch({
-    type: 'INCREMENT'
-});
-
-store.dispatch({
-    type: 'INCREMENT'
-});
-
-store.dispatch({
-    type: 'INCREMENT'
-});
-
+store.dispatch(actionAddCounter());
+store.dispatch(actionAddCounter());
+store.dispatch(actionAddCounter());
+store.dispatch(actionAddCounter());
+store.dispatch(actionDelCounter());
+store.dispatch(actionDelCounter());
+store.dispatch(actionDelCounter());
 
 
 
