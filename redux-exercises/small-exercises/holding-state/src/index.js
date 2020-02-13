@@ -1,18 +1,6 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// import './index.css';
-// import App from './App';
-// import * as serviceWorker from './serviceWorker';
-
-// ReactDOM.render(<App />, document.getElementById('root'));
-
-// // If you want your app to work offline and load faster, you can change
-// // unregister() to register() below. Note this comes with some pitfalls.
-// // Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.unregister();
 
 import {
-    createStore, bindActionCreators
+    createStore
 } from 'redux';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -31,15 +19,9 @@ function actionIncrement(howMuch) {
     }
 }
 
-const defaultState = {
-    amount: 0,
-    name: ''
-}
-
-
 // Holding State Functions
 
-function holdingState(state=defaultState, action) {
+function movieState(state={amount: 1000}, action) {
     const newState = { ...state }
     console.table(newState);
 
@@ -56,11 +38,83 @@ function holdingState(state=defaultState, action) {
     return newState;
 }
 
-const movieStore = createStore(holdingState);
-const songStore = createStore(holdingState);
-const burritoStore = createStore(holdingState);
-const coffeeStore = createStore(holdingState);
-const sandwichStore = createStore(holdingState);
+function songState(state={name: 'Ye'}, action) {
+    const newState = { ...state }
+    console.table(newState);
+
+    switch(action.type) {
+        case 'INCREMENT':
+            newState.amount = state.amount + action.amount;
+            break;
+        case 'NAMECHANGE':
+            newState.name = action.name;
+            break;
+        default:
+            break;
+    }
+    return newState;
+}
+
+function burritoState(state={amount: 300}, action) {
+    const newState = { ...state }
+    console.table(newState);
+
+    switch(action.type) {
+        case 'INCREMENT':
+            newState.amount = state.amount + action.amount;
+            break;
+        case 'NAMECHANGE':
+            newState.name = action.name;
+            break;
+        default:
+            break;
+    }
+    return newState;
+}
+
+function coffeeState(state={amount: 2000}, action) {
+    const newState = { ...state }
+    console.table(newState);
+
+    switch(action.type) {
+        case 'INCREMENT':
+            newState.amount = state.amount + action.amount;
+            break;
+        case 'NAMECHANGE':
+            newState.name = action.name;
+            break;
+        default:
+            break;
+    }
+    return newState;
+}
+
+function sandwichState(state={name: 'BLT'}, action) {
+    const newState = { ...state }
+    console.table(newState);
+
+    switch(action.type) {
+        case 'INCREMENT':
+            newState.amount = state.amount + action.amount;
+            break;
+        case 'NAMECHANGE':
+            newState.name = action.name;
+            break;
+        default:
+            break;
+    }
+    return newState;
+}
+
+// Create Store
+
+const movieStore = createStore(movieState, composeWithDevTools());
+const songStore = createStore(songState, composeWithDevTools());
+const burritoStore = createStore(burritoState, composeWithDevTools());
+const coffeeStore = createStore(coffeeState, composeWithDevTools());
+const sandwichStore = createStore(sandwichState, composeWithDevTools());
+
+// Subscribe to Stores
 
 movieStore.subscribe(() => {
     console.log(`The state is now.`);
@@ -87,11 +141,21 @@ sandwichStore.subscribe(() => {
     console.table(sandwichStore.getState());
 });
 
+// Dispatches
 
 movieStore.dispatch(actionIncrement(5));
+movieStore.dispatch(actionIncrement(25));
+
 songStore.dispatch(actionChangeName('Guiltiness'));
+songStore.dispatch(actionChangeName('Rapture'));
+
 burritoStore.dispatch(actionIncrement(10));
+burritoStore.dispatch(actionIncrement(40));
+
 coffeeStore.dispatch(actionIncrement(50));
+coffeeStore.dispatch(actionIncrement(100));
+
 sandwichStore.dispatch(actionChangeName('Reuben'));
+sandwichStore.dispatch(actionChangeName('Turkey Melt'));
 
 
